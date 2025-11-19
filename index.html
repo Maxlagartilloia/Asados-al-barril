@@ -116,13 +116,13 @@
     <!-- HEADER -->
     <header class="header-bar sticky top-0 z-50">
         <div class="container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center gap-3">
-            <a href="#" onclick="showPage('home')" class="flex items-center gap-2 sm:gap-3">
-                <div class="text-3xl sm:text-4xl font-extrabold product-name brand-gold-text leading-none">
-                    PUNTO CERO
-                </div>
-                <div class="text-base sm:text-lg font-semibold brand-red-text leading-none">
-                    AL BARRIL
-                </div>
+            <!-- LOGO GRANDE (se eliminaron los textos al lado) -->
+            <a href="#" onclick="showPage('home')" class="flex items-center">
+                <img
+                    src="https://i.postimg.cc/K8b8VN57/IMG-0320.png"
+                    alt="Punto Cero al Barril"
+                    class="h-14 sm:h-16 md:h-20 w-auto object-contain"
+                >
             </a>
 
             <!-- Navegación desktop -->
@@ -298,7 +298,7 @@
                     <!-- FORMULARIO -->
                     <form id="order-form" class="space-y-4">
                         <!-- DINE-IN -->
-                        <div id="dine-in-fields" class="bg-white p-5 rounded-lg shadow-xl text-gray-800">
+                        <div id="dine-in-fields" class="bg-white p-5 rounded-lg shadow-xl text-gray-808">
                             <div class="mb-4">
                                 <label for="table-number" class="block text-gray-700 font-bold mb-2">
                                     Número de mesa
