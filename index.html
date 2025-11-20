@@ -65,6 +65,7 @@
       transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
     }
 
+    /* Clases heredadas del menú que me pegaste (adaptadas a tu look) */
     .product-name {
       font-family: 'Bebas Neue', sans-serif;
       letter-spacing: 0.08em;
@@ -93,7 +94,7 @@
       max-width: 100%;
       width: 100%;
       height: 100%;
-      object-fit: cover; /* 🔥 siempre ajustada al cuadro */
+      object-fit: cover;
       border-radius: 0.6rem;
       box-shadow: 0 6px 16px rgba(0,0,0,0.7);
     }
@@ -106,6 +107,7 @@
       box-shadow: 0 18px 35px rgba(0,0,0,0.75);
     }
 
+    /* Modal notificación */
     #notification-modal {
       transition: opacity 0.25s ease-out;
     }
@@ -127,7 +129,7 @@
   <header class="glass-header text-white sticky top-0 z-50 border-b border-slate-800/70">
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
 
-      <!-- Logo (solo el ícono) -->
+      <!-- Logo + Nombre -->
       <a href="#" onclick="showPage('home')" class="flex items-center gap-3">
         <img src="logo.png" alt="Logo Punto Cero al Barril" class="h-12 w-auto object-contain" />
         <div class="leading-tight hidden sm:block">
@@ -167,7 +169,7 @@
     </div>
   </header>
 
-  <!-- HOME PAGE -->
+  <!-- HOME PAGE (MENÚ DIGITAL) -->
   <main id="home-page" class="relative z-10">
 
     <!-- HERO -->
@@ -187,6 +189,7 @@
             Cocción lenta, fuego real y salsas de la casa que te van a amarrar al barril. 🔥
           </p>
 
+          <!-- Botones -->
           <div class="flex flex-wrap gap-3">
             <a href="#menu"
               class="btn-main px-5 py-2.5 bg-[var(--accent)] hover:bg-yellow-400 text-black font-semibold rounded-full text-sm md:text-base inline-flex items-center gap-2">
@@ -201,6 +204,7 @@
             </a>
           </div>
 
+          <!-- Datos rápidos -->
           <div class="grid grid-cols-2 gap-4 text-xs md:text-sm text-[var(--text-muted)] pt-3 md:pt-4">
             <div class="space-y-1">
               <p class="font-semibold text-white flex items-center gap-2">
@@ -224,7 +228,7 @@
           </div>
         </div>
 
-        <!-- Hero Imagen (hero.jpg en raíz) -->
+        <!-- Imagen Hero -->
         <div class="relative">
           <div class="rounded-3xl overflow-hidden shadow-2xl border border-[var(--accent)]/40">
             <img src="hero.jpg" alt="Costillas y asados de Punto Cero al Barril" class="w-full h-72 md:h-96 object-cover" />
@@ -257,6 +261,7 @@
           </ul>
         </div>
 
+        <!-- Info del local -->
         <div class="bg-[var(--bg-card)]/90 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl space-y-4">
           <h3 class="font-semibold text-lg md:text-xl mb-1 flex items-center gap-2">
             <i class="fa-solid fa-fire-flame-curved text-[var(--accent-strong)]"></i>
@@ -307,7 +312,7 @@
       </div>
     </section>
 
-    <!-- MENÚ DIGITAL -->
+    <!-- MENÚ DIGITAL CON JS (estructura del código que pegaste) -->
     <section id="menu" class="py-10 md:py-14 bg-black/60 border-y border-slate-800">
       <div class="max-w-6xl mx-auto px-4">
 
@@ -328,7 +333,7 @@
           id="product-list"
           class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
         >
-          <!-- Cards generadas por JS -->
+          <!-- Las cards se generan con JS -->
         </div>
 
         <div class="text-center mt-8 text-xs md:text-sm text-[var(--text-muted)]">
@@ -360,6 +365,7 @@
           </p>
         </div>
 
+        <!-- Mapa -->
         <div class="rounded-2xl overflow-hidden border border-slate-800 shadow-2xl h-64 md:h-80">
           <iframe
             src="https://www.google.com/maps?q=Punto%20Cero%20al%20Barril&output=embed"
@@ -374,6 +380,7 @@
     <!-- CONTACTO -->
     <section id="contacto" class="py-10 bg-black/80 border-t border-slate-800">
       <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-[1.4fr,1fr] gap-8">
+        <!-- Datos de contacto -->
         <div class="space-y-4 md:space-y-5">
           <h2 class="text-2xl md:text-3xl font-bold">Contacto y pedidos</h2>
           <p class="text-sm md:text-base text-[var(--text-muted)]">
@@ -423,6 +430,7 @@
           </div>
         </div>
 
+        <!-- Llamado a la acción -->
         <div class="bg-[var(--bg-card)] border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl space-y-4">
           <h3 class="font-semibold text-lg md:text-xl mb-1">
             ¿Listo para un asado épico?
@@ -442,13 +450,14 @@
     </section>
   </main>
 
-  <!-- CHECKOUT -->
+  <!-- CHECKOUT PAGE (estructura completa de tu código) -->
   <main id="checkout-page" class="hidden relative z-10 py-14 md:py-16">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
       <h2 class="text-3xl md:text-4xl text-center text-white grill-glow-text mb-10 product-name">
         Finalizar Pedido
       </h2>
 
+      <!-- Carrito vacío -->
       <div
         id="cart-empty-message"
         class="hidden text-center py-10 bg-[var(--bg-card)]/95 rounded-2xl border border-[var(--accent-strong)]/50 max-w-2xl mx-auto"
@@ -465,11 +474,13 @@
       </div>
       
       <div id="cart-content" class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <!-- COLUMNA 1: MODALIDAD Y DATOS -->
         <div>
           <h3 class="text-xl md:text-2xl text-white mb-5 product-name">
             1. Modalidad y datos
           </h3>
           
+          <!-- Modalidad -->
           <div class="mb-6">
             <div class="flex flex-col sm:flex-row gap-3">
               <label class="flex items-center bg-[var(--bg-card)]/90 p-3 rounded-xl border border-[var(--accent)]/60 cursor-pointer flex-1 transition-all hover:bg-[var(--bg-card)]">
@@ -502,7 +513,9 @@
             </div>
           </div>
 
+          <!-- FORMULARIO -->
           <form id="order-form" class="space-y-4">
+            <!-- DINE-IN -->
             <div id="dine-in-fields" class="bg-white p-5 rounded-lg shadow-xl text-gray-800">
               <div class="mb-4">
                 <label for="table-number" class="block text-gray-700 font-bold mb-2">
@@ -532,6 +545,7 @@
               </div>
             </div>
 
+            <!-- DELIVERY -->
             <div id="delivery-fields" class="bg-white p-5 rounded-lg shadow-xl text-gray-800 hidden">
               <div class="mb-3">
                 <label for="name" class="block text-gray-700 font-bold mb-2">
@@ -594,6 +608,7 @@
           </form>
         </div>
 
+        <!-- COLUMNA 2: RESUMEN + PAGO -->
         <div>
           <div class="flex justify-between items-center mb-5">
             <h3 class="text-xl md:text-2xl text-white product-name">
@@ -613,6 +628,7 @@
             id="checkout-summary"
             class="bg-[var(--bg-card)] p-5 rounded-lg shadow-xl border border-[var(--accent)]/50 text-sm md:text-base"
           >
+            <!-- Resumen generado por JS -->
           </div>
           
           <div class="bg-[var(--bg-card)] p-5 rounded-lg shadow-xl mt-7 border border-[var(--accent-strong)]/60 text-sm">
@@ -718,18 +734,23 @@
   </div>
 
   <script>
+  // Año dinámico
   document.getElementById("year").textContent = new Date().getFullYear();
 
   document.addEventListener('DOMContentLoaded', () => {
-    // 🔥 Productos usando archivos locales plato-1.jpg ... plato-5.jpg
+    // --- DATA DE PRODUCTOS ---
     const products = [
-      { id: 1, name: 'Costillas al Barril con Moro', price: 19.99, img: 'plato-1.jpg', desc: 'Tiernas costillas de cerdo asadas en barril, servidas con moro, papa frita, maduro, chorizo y salsas de la casa.' },
-      { id: 2, name: 'Panceta Crujiente con Moro', price: 17.99, img: 'plato-2.jpg', desc: 'Panceta crocante acompañada de moro, papa frita, maduro, chorizo y salsas exclusivas de la casa.' },
-      { id: 3, name: 'Panceta Crujiente (Simple)', price: 15.00, img: 'plato-3.jpg', desc: 'Nuestra panceta crocante sin moro, acompañada de papa frita, maduro, chorizo y salsas.' },
-      { id: 4, name: 'Picanha Angus (300gr)', price: 18.00, img: 'plato-4.jpg', desc: '300 gramos de Picanha Angus a la parrilla, servida con papa frita, maduro y chorizo.' },
-      { id: 5, name: 'Bandeja Punto Cero (Picadita)', price: 22.00, img: 'plato-5.jpg', desc: 'Picadita para compartir (precio base). Pregunta por bandejas grandes: $32 y $52.' }
+      { id: 1, name: 'Costillas al Barril con Moro', price: 19.99, img: 'https://i.postimg.cc/7Ctqv01K/IMG-0314.jpg', desc: 'Tiernas costillas de cerdo asadas en barril, servidas con moro, papa frita, maduro, chorizo y salsas de la casa.' },
+      { id: 2, name: 'Panceta Crujiente con Moro', price: 17.99, img: 'https://i.postimg.cc/1g7yxw0j/IMG-0313.jpg', desc: 'Panceta crocante acompañada de moro, papa frita, maduro, chorizo y salsas exclusivas de la casa.' },
+      { id: 3, name: 'Panceta Crujiente (Simple)', price: 15.00, img: 'https://i.postimg.cc/QBYjL1gS/IMG-0315.jpg', desc: 'Nuestra panceta crocante sin moro, acompañada de papa frita, maduro, chorizo y salsas.' },
+      { id: 4, name: 'Picanha Angus (300gr)', price: 18.00, img: 'https://i.postimg.cc/jW3RVP6Z/IMG-0316.jpg', desc: '300 gramos de Picanha Angus a la parrilla, servida con papa frita, maduro y chorizo.' },
+      { id: 5, name: 'Bandeja Punto Cero (Picadita)', price: 22.00, img: 'https://i.postimg.cc/KKpmXB7D/IMG-0317.jpg', desc: 'Picadita para compartir (precio base). Pregunta por bandejas grandes: $32 y $52.' },
+      { id: 6, name: 'Moro de la Casa', price: 3.50, img: 'https://placehold.co/400x224/8A3324/ffffff?text=Moro', desc: 'Porción extra de nuestro cremoso moro de la casa.' },
+      { id: 7, name: 'Papa Frita Clásica', price: 2.50, img: 'https://placehold.co/400x224/DDA520/333333?text=Papas+Fritas', desc: 'Porción de papas fritas, perfectas para acompañar.' },
+      { id: 8, name: 'Chorizo Ahumado Adicional', price: 4.00, img: 'https://placehold.co/400x224/505050/ffffff?text=Chorizo', desc: 'Unidad de chorizo artesanal ahumado.' },
     ];
 
+    // --- ELEMENTOS DOM ---
     const productList = document.getElementById('product-list');
     const cartCountEl = document.getElementById('cart-count');
     const notificationModal = document.getElementById('notification-modal');
@@ -754,10 +775,12 @@
     const tableNumberInput = document.getElementById('table-number');
     const clientNameLocalInput = document.getElementById('client-name-local');
 
+    // --- ESTADO ---
     let cart = {};
     let sharedLocation = null;
     let orderType = 'dineIn';
 
+    // Helpers
     function setInputRequired(input, isRequired) {
       input.required = isRequired;
       input.disabled = !isRequired;
@@ -767,9 +790,11 @@
       return '$' + value.toFixed(2);
     }
 
+    // Cambiar modalidad
     function handleOrderTypeChange() {
       orderType = document.querySelector('input[name="orderType"]:checked').value;
 
+      // Reset ubicación
       sharedLocation = null;
       locationStatus.textContent = '';
       shareLocationBtn.disabled = (orderType === 'dineIn');
@@ -793,6 +818,7 @@
       }
     }
 
+    // Render productos
     function renderProducts() {
       productList.innerHTML = '';
       products.forEach(product => {
@@ -829,6 +855,7 @@
       });
     }
 
+    // Carrito
     function addToCart(productId, quantity = 1) {
       const idStr = String(productId);
       if (cart[idStr]) {
@@ -899,6 +926,7 @@
       checkoutSummary.innerHTML = html;
     }
 
+    // Eventos en lista de productos
     productList.addEventListener('click', (e) => {
       const card = e.target.closest('.product-card');
       if (!card) return;
@@ -930,15 +958,18 @@
       }
     });
 
+    // Modalidad radio
     radioDineIn.addEventListener('change', handleOrderTypeChange);
     radioDelivery.addEventListener('change', handleOrderTypeChange);
 
+    // Vaciar carrito
     clearCartBtn.addEventListener('click', () => {
       cart = {};
       updateCartUI();
       showNotification('El carrito ha sido vaciado.');
     });
 
+    // Geolocalización
     shareLocationBtn.addEventListener('click', () => {
       if (!navigator.geolocation) {
         locationStatus.textContent = 'La geolocalización no es soportada en este dispositivo.';
@@ -965,6 +996,7 @@
       );
     });
 
+    // Enviar pedido
     orderForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
@@ -1016,17 +1048,19 @@
         if (sharedLocation) {
           message += `*Ubicación (Maps):* ${sharedLocation}%0A`;
         } else {
-          message += '*Ubicación:* No enviada (puedo enviar luego por chat).%0A`;
+          message += '*Ubicación:* No enviada (puedo enviar luego por chat).%0A';
         }
       }
 
       message += '%0APor favor, confirmen el total y el tiempo estimado. 🙏🔥';
 
+      // Número real de Punto Cero al Barril
       const whatsappNumber = '593988025075';
       const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
 
       window.open(whatsappUrl, '_blank');
 
+      // Reset
       cart = {};
       sharedLocation = null;
       orderForm.reset();
@@ -1036,6 +1070,7 @@
       showNotification('¡Pedido enviado! Revisa tu WhatsApp para la confirmación de Punto Cero al Barril.');
     });
 
+    // Navegación entre "páginas"
     const pages = document.querySelectorAll('main');
     window.showPage = (pageId) => {
       pages.forEach(page => page.classList.add('hidden'));
@@ -1049,6 +1084,7 @@
       }
     };
 
+    // Notificaciones
     function showNotification(message) {
       notificationMessage.textContent = message;
       notificationModal.classList.remove('opacity-0', 'pointer-events-none');
@@ -1065,6 +1101,7 @@
       if (e.target === notificationModal) hideNotification();
     });
 
+    // Inicial
     renderProducts();
     updateCartUI();
     handleOrderTypeChange();
