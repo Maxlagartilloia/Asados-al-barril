@@ -707,11 +707,14 @@
         Listo
       </button>
     </div>
-  </div> 
-<script>
-document.getElementById("year").textContent = new Date().getFullYear();
-
+  </div> <script>
 document.addEventListener('DOMContentLoaded', () => {
+  // Actualizar año del footer (si existe el span#year)
+  const yearSpan = document.getElementById('year');
+  if (yearSpan) {
+    yearSpan.textContent = new Date().getFullYear();
+  }
+
   // 🔥 Productos usando archivos locales plato-1.jpg ... plato-5.jpg
   const products = [
     { id: 1, name: 'Costillas al Barril con Moro', price: 7.50, img: 'plato-1.jpg', desc: 'Tiernas costillas de cerdo asadas en barril, servidas con moro, papa frita, maduro, chorizo y salsas de la casa.' },
@@ -721,34 +724,37 @@ document.addEventListener('DOMContentLoaded', () => {
     { id: 5, name: 'Bandeja Punto Cero (Picadita)', price: 22.00, img: 'plato-5.jpg', desc: 'Picadita para compartir (precio base). Pregunta por bandejas grandes: $32 y $52.' }
   ];
 
-  const productList = document.getElementById('product-list');
-  const cartCountEl = document.getElementById('cart-count');
-  const notificationModal = document.getElementById('notification-modal');
-  const notificationMessage = document.getElementById('notification-message');
+  // 📌 Referencias al DOM
+  const productList           = document.getElementById('product-list');
+  const cartCountEl          = document.getElementById('cart-count');
+  const notificationModal    = document.getElementById('notification-modal');
+  const notificationMessage  = document.getElementById('notification-message');
   const closeNotificationBtn = document.getElementById('close-notification-btn');
-  const orderForm = document.getElementById('order-form');
-  const checkoutSummary = document.getElementById('checkout-summary');
-  const clearCartBtn = document.getElementById('clear-cart-btn');
-  const cartEmptyMessage = document.getElementById('cart-empty-message');
-  const cartContent = document.getElementById('cart-content');
-  const shareLocationBtn = document.getElementById('share-location-btn-checkout');
-  const locationStatus = document.getElementById('location-status-checkout');
+  const orderForm            = document.getElementById('order-form');
+  const checkoutSummary      = document.getElementById('checkout-summary');
+  const clearCartBtn         = document.getElementById('clear-cart-btn');
+  const cartEmptyMessage     = document.getElementById('cart-empty-message');
+  const cartContent          = document.getElementById('cart-content');
+  const shareLocationBtn     = document.getElementById('share-location-btn-checkout');
+  const locationStatus       = document.getElementById('location-status-checkout');
 
-  const dineInFields = document.getElementById('dine-in-fields');
+  const dineInFields   = document.getElementById('dine-in-fields');
   const deliveryFields = document.getElementById('delivery-fields');
-  const radioDineIn = document.getElementById('radio-dine-in');
-  const radioDelivery = document.getElementById('radio-delivery');
+  const radioDineIn    = document.getElementById('radio-dine-in');
+  const radioDelivery  = document.getElementById('radio-delivery');
 
-  const nameInput = document.getElementById('name');
-  const phoneInput = document.getElementById('phone');
-  const addressInput = document.getElementById('address');
-  const tableNumberInput = document.getElementById('table-number');
+  const nameInput            = document.getElementById('name');
+  const phoneInput           = document.getElementById('phone');
+  const addressInput         = document.getElementById('address');
+  const tableNumberInput     = document.getElementById('table-number');
   const clientNameLocalInput = document.getElementById('client-name-local');
 
+  // 🧠 Estado
   let cart = {};
   let sharedLocation = null;
   let orderType = 'dineIn';
 
+  // Helpers
   function setInputRequired(input, isRequired) {
     input.required = isRequired;
     input.disabled = !isRequired;
@@ -758,6 +764,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return '$' + value.toFixed(2);
   }
 
+  // Cambiar modalidad (mesa / domicilio)
   function handleOrderTypeChange() {
     orderType = document.querySelector('input[name="orderType"]:checked').value;
 
@@ -784,6 +791,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Renderizar productos en el menú
   function renderProducts() {
     productList.innerHTML = '';
     products.forEach(product => {
@@ -820,6 +828,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Carrito
   function addToCart(productId, quantity = 1) {
     const idStr = String(productId);
     if (cart[idStr]) {
@@ -890,6 +899,7 @@ document.addEventListener('DOMContentLoaded', () => {
     checkoutSummary.innerHTML = html;
   }
 
+  // Eventos en el listado de productos (cantidad + añadir)
   productList.addEventListener('click', (e) => {
     const card = e.target.closest('.product-card');
     if (!card) return;
@@ -921,15 +931,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Cambio de modalidad
   radioDineIn.addEventListener('change', handleOrderTypeChange);
   radioDelivery.addEventListener('change', handleOrderTypeChange);
 
+  // Vaciar carrito
   clearCartBtn.addEventListener('click', () => {
     cart = {};
     updateCartUI();
     showNotification('El carrito ha sido vaciado.');
   });
 
+  // Geolocalización para domicilio
   shareLocationBtn.addEventListener('click', () => {
     if (!navigator.geolocation) {
       locationStatus.textContent = 'La geolocalización no es soportada en este dispositivo.';
@@ -956,6 +969,7 @@ document.addEventListener('DOMContentLoaded', () => {
     );
   });
 
+  // Enviar pedido por WhatsApp
   orderForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
@@ -991,8 +1005,8 @@ document.addEventListener('DOMContentLoaded', () => {
         message += `*Nombre:* ${nombreLocal}\n`;
       }
     } else {
-      const name = (nameInput.value || '').trim();
-      const phone = (phoneInput.value || '').trim();
+      const name    = (nameInput.value || '').trim();
+      const phone   = (phoneInput.value || '').trim();
       const address = (addressInput.value || '').trim();
 
       if (!name || !phone || !address) {
@@ -1000,7 +1014,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      message += '*Modalidad:* Entrega a domicilio 🛵\n`;
+      message += '*Modalidad:* Entrega a domicilio 🛵\n';
       message += `*Nombre:* ${name}\n`;
       message += `*WhatsApp:* ${phone}\n`;
       message += `*Dirección:* ${address}\n`;
@@ -1013,11 +1027,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     message += '\nPor favor, confirmen el total y el tiempo estimado. 🙏🔥';
 
+    // Número real de WhatsApp del local (formato 593 + número)
     const whatsappNumber = '593988025075';
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 
     window.open(whatsappUrl, '_blank');
 
+    // Reset después de enviar
     cart = {};
     sharedLocation = null;
     orderForm.reset();
@@ -1027,6 +1043,7 @@ document.addEventListener('DOMContentLoaded', () => {
     showNotification('¡Pedido enviado! Revisa tu WhatsApp para la confirmación de Punto Cero al Barril.');
   });
 
+  // Navegación entre "páginas" (home / checkout)
   const pages = document.querySelectorAll('main');
   window.showPage = (pageId) => {
     pages.forEach(page => page.classList.add('hidden'));
@@ -1040,6 +1057,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  // Notificaciones
   function showNotification(message) {
     notificationMessage.textContent = message;
     notificationModal.classList.remove('opacity-0', 'pointer-events-none');
@@ -1056,10 +1074,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.target === notificationModal) hideNotification();
   });
 
+  // Inicializar
   renderProducts();
   updateCartUI();
   handleOrderTypeChange();
 });
+</script>
 </script>
 </body>
 </html>
