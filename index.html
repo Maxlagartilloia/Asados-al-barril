@@ -127,17 +127,9 @@
   <header class="glass-header text-white sticky top-0 z-50 border-b border-slate-800/70">
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
 
-      <!-- Logo (solo el ícono) -->
+      <!-- Logo SOLO (sin texto) -->
       <a href="#" onclick="showPage('home')" class="flex items-center gap-3">
         <img src="logo.png" alt="Logo Punto Cero al Barril" class="h-12 w-auto object-contain" />
-        <div class="leading-tight hidden sm:block">
-          <p class="title-font text-sm tracking-[0.3em] text-[var(--accent)] uppercase">
-            Punto Cero
-          </p>
-          <p class="font-semibold text-sm md:text-base">
-            Al Barril · Asados & Parrilla
-          </p>
-        </div>
       </a>
 
       <!-- Navegación -->
@@ -238,7 +230,7 @@
     <section id="nosotros" class="py-10 md:py-14">
       <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-2 gap-8 items-center">
         <div class="space-y-4 md:space-y-5">
-          <h2 class="text-2xl md:text-3xl font-bold">
+          <h2 class="text-2xl md:3xl font-bold">
             Punto Cero al Barril, donde el fuego manda 🔥
           </h2>
           <p class="text-sm md:text-base text-[var(--text-muted)]">
@@ -974,16 +966,16 @@
       }
 
       const currentOrderType = document.querySelector('input[name="orderType"]:checked').value;
-      let message = '¡Hola Punto Cero al Barril! 🔥 Quisiera hacer el siguiente pedido:%0A%0A';
+      let message = '¡Hola Punto Cero al Barril! 🔥 Quisiera hacer el siguiente pedido:\n\n';
 
       let total = 0;
       for (const id in cart) {
         const item = cart[id];
-        message += `• ${item.quantity}x - ${item.name}%0A`;
+        message += `• ${item.quantity}x - ${item.name}\n`;
         total += item.price * item.quantity;
       }
 
-      message += `%0ATotal aproximado: *${formatMoney(total)}*%0A%0A`;
+      message += `\nTotal aproximado: *${formatMoney(total)}*\n\n`;
 
       if (currentOrderType === 'dineIn') {
         const mesa = (tableNumberInput.value || '').trim();
@@ -994,10 +986,10 @@
           return;
         }
 
-        message += '*Modalidad:* Servir en mesa 🍽️%0A';
-        message += `*Mesa:* ${mesa}%0A`;
+        message += '*Modalidad:* Servir en mesa 🍽️\n';
+        message += `*Mesa:* ${mesa}\n`;
         if (nombreLocal) {
-          message += `*Nombre:* ${nombreLocal}%0A`;
+          message += `*Nombre:* ${nombreLocal}\n`;
         }
       } else {
         const name = (nameInput.value || '').trim();
@@ -1009,21 +1001,21 @@
           return;
         }
 
-        message += '*Modalidad:* Entrega a domicilio 🛵%0A';
-        message += `*Nombre:* ${name}%0A`;
-        message += `*WhatsApp:* ${phone}%0A`;
-        message += `*Dirección:* ${address}%0A`;
+        message += '*Modalidad:* Entrega a domicilio 🛵\n';
+        message += `*Nombre:* ${name}\n`;
+        message += `*WhatsApp:* ${phone}\n`;
+        message += `*Dirección:* ${address}\n`;
         if (sharedLocation) {
-          message += `*Ubicación (Maps):* ${sharedLocation}%0A`;
+          message += `*Ubicación (Maps):* ${sharedLocation}\n`;
         } else {
-          message += '*Ubicación:* No enviada (puedo enviar luego por chat).%0A`;
+          message += '*Ubicación:* No enviada (puedo enviar luego por chat).\n';
         }
       }
 
-      message += '%0APor favor, confirmen el total y el tiempo estimado. 🙏🔥';
+      message += '\nPor favor, confirmen el total y el tiempo estimado. 🙏🔥';
 
       const whatsappNumber = '593988025075';
-      const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
+      const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 
       window.open(whatsappUrl, '_blank');
 
