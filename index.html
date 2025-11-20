@@ -319,6 +319,64 @@
       </div>
     </section>
 
+    <!-- TETRIS - JUEGA MIENTRAS ESPERAS -->
+<section id="tetris-section" class="py-10 bg-black/90 border-t border-slate-800">
+  <div class="max-w-6xl mx-auto px-4">
+
+    <div class="text-center mb-6">
+      <p class="title-font text-[var(--accent-strong)] text-sm tracking-[0.3em] uppercase mb-1">
+        Juego BBQ
+      </p>
+      <h2 class="text-2xl md:text-3xl font-bold mb-2">
+        Juega Tetris mientras esperas tu pedido 🔥
+      </h2>
+      <p class="text-sm md:text-base text-[var(--text-muted)] max-w-2xl mx-auto">
+        Haz líneas, suma puntos y mata el tiempo mientras tus costillas salen del fuego 😎.
+      </p>
+    </div>
+
+    <div class="flex flex-col items-center gap-4">
+      <div class="bg-[var(--bg-card)] border border-slate-800 rounded-2xl p-4 md:p-5 shadow-2xl flex flex-col items-center gap-4 w-full max-w-md">
+        
+        <div class="flex items-center justify-between gap-4 w-full text-xs md:text-sm text-[var(--text-muted)]">
+          <span class="flex items-center gap-2">
+            <i class="fa-solid fa-fire-flame-curved text-[var(--accent-strong)]"></i>
+            Puntos: <span id="tetris-score">0</span>
+          </span>
+
+          <span class="flex items-center gap-2">
+            <i class="fa-solid fa-layer-group text-[var(--accent-strong)]"></i>
+            Filas: <span id="tetris-lines">0</span>
+          </span>
+
+          <button
+            id="tetris-restart"
+            type="button"
+            class="btn-main px-4 py-2 bg-[var(--accent)] hover:bg-yellow-400 text-black font-semibold rounded-full flex items-center gap-2 text-xs md:text-sm ml-auto">
+            <i class="fa-solid fa-rotate-right"></i>
+            Jugar / Reiniciar
+          </button>
+        </div>
+
+        <!-- CANVAS -->
+        <canvas
+          id="tetris-canvas"
+          width="300"
+          height="480"
+          class="border border-slate-700 rounded-xl bg-slate-900/90"
+          style="max-width: 100%; height: auto;">
+        </canvas>
+
+        <p class="text-[10px] md:text-xs text-[var(--text-muted)] text-center">
+          Controles: ⬅️➡️ mover · ⬆️ girar · ⬇️ caer rápido
+        </p>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
     <!-- CONTACTO -->
     <section id="contacto" class="py-10 bg-black/80 border-t border-slate-800">
       <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-[1.4fr,1fr] gap-8">
@@ -1036,6 +1094,213 @@ document.addEventListener('DOMContentLoaded', () => {
   handleOrderTypeChange();
 });
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const canvas  = document.getElementById("tetris-canvas");
+  const scoreEl = document.getElementById("tetris-score");
+  const linesEl = document.getElementById("tetris-lines");
+  const restart = document.getElementById("tetris-restart");
+
+  if (!canvas || !scoreEl || !linesEl || !restart) return;
+
+  const ctx = canvas.getContext("2d");
+
+  const COLS  = 10;
+  const ROWS  = 20;
+  const BLOCK = 24;
+
+  canvas.width  = COLS * BLOCK;
+  canvas.height = ROWS * BLOCK;
+
+  const COLORS = [
+    null,
+    "#f97316",
+    "#22c55e",
+    "#3b82f6",
+    "#eab308",
+    "#ec4899",
+    "#8b5cf6",
+    "#facc15",
+  ];
+
+  const SHAPES = {
+    I: [[0,0,0,0],[1,1,1,1],[0,0,0,0],[0,0,0,0]],
+    J: [[2,0,0],[2,2,2],[0,0,0]],
+    L: [[0,0,3],[3,3,3],[0,0,0]],
+    O: [[4,4],[4,4]],
+    S: [[0,5,5],[5,5,0],[0,0,0]],
+    T: [[0,6,0],[6,6,6],[0,0,0]],
+    Z: [[7,7,0],[0,7,7],[0,0,0]],
+  };
+
+  function matrix(w, h) {
+    return Array.from({ length: h }, () => Array(w).fill(0));
+  }
+
+  let board = matrix(COLS, ROWS);
+  let piece = null;
+  let pos   = null;
+  let drop  = 0;
+  let last  = 0;
+  let score = 0;
+  let lines = 0;
+  let over  = false;
+
+  function randomPiece() {
+    const keys = Object.keys(SHAPES);
+    const shape = SHAPES[keys[(Math.random()*keys.length)|0]];
+    return shape.map(r => [...r]);
+  }
+
+  function resetPiece() {
+    piece = randomPiece();
+    pos = { x: (COLS/2 | 0) - (piece[0].length/2 | 0), y: 0 };
+    if (collide()) over = true;
+  }
+
+  function collide() {
+    for (let y=0; y<piece.length; y++){
+      for (let x=0; x<piece[y].length; x++){
+        if (piece[y][x] !== 0){
+          const nx = pos.x + x;
+          const ny = pos.y + y;
+
+          if (nx < 0 || nx >= COLS || ny >= ROWS || board[ny][nx] !== 0) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  function merge() {
+    for (let y=0; y<piece.length; y++){
+      for (let x=0; x<piece[y].length; x++){
+        if (piece[y][x] !== 0) {
+          board[pos.y + y][pos.x + x] = piece[y][x];
+        }
+      }
+    }
+  }
+
+  function rotate(m) {
+    return m[0].map((_, i) => m.map(r => r[i]).reverse());
+  }
+
+  function rotatePiece() {
+    const r = rotate(piece);
+    const prev = piece;
+    piece = r;
+    if (collide()) piece = prev;
+  }
+
+  function clearLines() {
+    let cleared = 0;
+
+    outer: for (let y = ROWS - 1; y >= 0; y--) {
+      for (let x = 0; x < COLS; x++){
+        if (board[y][x] === 0) continue outer;
+      }
+      board.splice(y, 1);
+      board.unshift(Array(COLS).fill(0));
+      cleared++;
+      y++;
+    }
+
+    if (cleared > 0){
+      lines += cleared;
+      score += [0,100,250,500,800][cleared];
+      scoreEl.textContent = score;
+      linesEl.textContent = lines;
+    }
+  }
+
+  function draw() {
+    ctx.fillStyle = "#0f172a";
+    ctx.fillRect(0,0,canvas.width, canvas.height);
+
+    for (let y=0; y<ROWS; y++){
+      for (let x=0; x<COLS; x++){
+        drawBlock(x,y,board[y][x]);
+      }
+    }
+
+    if (piece) {
+      for (let y=0; y<piece.length; y++){
+        for (let x=0; x<piece[y].length; x++){
+          if (piece[y][x] !== 0){
+            drawBlock(x+pos.x, y+pos.y, piece[y][x]);
+          }
+        }
+      }
+    }
+  }
+
+  function drawBlock(x,y,colorIndex){
+    if (!colorIndex) return;
+    ctx.fillStyle = COLORS[colorIndex];
+    ctx.fillRect(x*BLOCK, y*BLOCK, BLOCK, BLOCK);
+    ctx.strokeStyle = "black";
+    ctx.strokeRect(x*BLOCK, y*BLOCK, BLOCK, BLOCK);
+  }
+
+  function fall(time=0) {
+    if (over){ draw(); return; }
+    const delta = time - last;
+    last = time;
+    drop += delta;
+
+    if (drop > 500) {
+      pos.y++;
+      if (collide()) {
+        pos.y--;
+        merge();
+        clearLines();
+        resetPiece();
+      }
+      drop = 0;
+    }
+
+    draw();
+    requestAnimationFrame(fall);
+  }
+
+  document.addEventListener("keydown", e => {
+    if (!piece || over) return;
+
+    if (e.key === "ArrowLeft") {
+      pos.x--;
+      if (collide()) pos.x++;
+    }
+    else if (e.key === "ArrowRight") {
+      pos.x++;
+      if (collide()) pos.x--;
+    }
+    else if (e.key === "ArrowDown") {
+      pos.y++;
+      if (collide()) { pos.y--; merge(); clearLines(); resetPiece(); }
+      drop = 0;
+    }
+    else if (e.key === "ArrowUp") {
+      rotatePiece();
+    }
+  });
+
+  restart.addEventListener("click", () => {
+    board = matrix(COLS, ROWS);
+    score = 0;
+    lines = 0;
+    over  = false;
+    scoreEl.textContent = "0";
+    linesEl.textContent = "0";
+    resetPiece();
+  });
+
+  resetPiece();
+  fall();
+});
 </script>
 </body>
 </html>
