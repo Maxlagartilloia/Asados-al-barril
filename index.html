@@ -707,360 +707,360 @@
         Listo
       </button>
     </div>
-  </div>
+  </div> 
 
   <script>
-  document.getElementById("year").textContent = new Date().getFullYear();
+document.getElementById("year").textContent = new Date().getFullYear();
 
-  document.addEventListener('DOMContentLoaded', () => {
-    // 🔥 Productos usando archivos locales plato-1.jpg ... plato-5.jpg
-    const products = [
-      { id: 1, name: 'Costillas al Barril con Moro', price: 7.50, img: 'plato-1.jpg', desc: 'Tiernas costillas de cerdo asadas en barril, servidas con moro, papa frita, maduro, chorizo y salsas de la casa.' },
-      { id: 2, name: 'Panceta Crujiente con Moro', price: 9.50, img: 'plato-2.jpg', desc: 'Panceta crocante acompañada de moro, papa frita, maduro, chorizo y salsas exclusivas de la casa.' },
-      { id: 3, name: 'Panceta Crujiente (Simple)', price: 7.50, img: 'plato-3.jpg', desc: 'Nuestra panceta crocante sin moro, acompañada de papa frita, maduro, chorizo y salsas.' },
-      { id: 4, name: 'Picanha Angus (300gr)', price: 16.00, img: 'plato-4.jpg', desc: '300 gramos de Picanha Angus a la parrilla, servida con papa frita, maduro y chorizo.' },
-      { id: 5, name: 'Bandeja Punto Cero (Picadita)', price: 22.00, img: 'plato-5.jpg', desc: 'Picadita para compartir (precio base). Pregunta por bandejas grandes: $32 y $52.' }
-    ];
+document.addEventListener('DOMContentLoaded', () => {
+  // 🔥 Productos usando archivos locales plato-1.jpg ... plato-5.jpg
+  const products = [
+    { id: 1, name: 'Costillas al Barril con Moro', price: 7.50, img: 'plato-1.jpg', desc: 'Tiernas costillas de cerdo asadas en barril, servidas con moro, papa frita, maduro, chorizo y salsas de la casa.' },
+    { id: 2, name: 'Panceta Crujiente con Moro', price: 9.50, img: 'plato-2.jpg', desc: 'Panceta crocante acompañada de moro, papa frita, maduro, chorizo y salsas exclusivas de la casa.' },
+    { id: 3, name: 'Panceta Crujiente (Simple)', price: 7.50, img: 'plato-3.jpg', desc: 'Nuestra panceta crocante sin moro, acompañada de papa frita, maduro, chorizo y salsas.' },
+    { id: 4, name: 'Picanha Angus (300gr)', price: 16.00, img: 'plato-4.jpg', desc: '300 gramos de Picanha Angus a la parrilla, servida con papa frita, maduro y chorizo.' },
+    { id: 5, name: 'Bandeja Punto Cero (Picadita)', price: 22.00, img: 'plato-5.jpg', desc: 'Picadita para compartir (precio base). Pregunta por bandejas grandes: $32 y $52.' }
+  ];
 
-    const productList = document.getElementById('product-list');
-    const cartCountEl = document.getElementById('cart-count');
-    const notificationModal = document.getElementById('notification-modal');
-    const notificationMessage = document.getElementById('notification-message');
-    const closeNotificationBtn = document.getElementById('close-notification-btn');
-    const orderForm = document.getElementById('order-form');
-    const checkoutSummary = document.getElementById('checkout-summary');
-    const clearCartBtn = document.getElementById('clear-cart-btn');
-    const cartEmptyMessage = document.getElementById('cart-empty-message');
-    const cartContent = document.getElementById('cart-content');
-    const shareLocationBtn = document.getElementById('share-location-btn-checkout');
-    const locationStatus = document.getElementById('location-status-checkout');
+  const productList = document.getElementById('product-list');
+  const cartCountEl = document.getElementById('cart-count');
+  const notificationModal = document.getElementById('notification-modal');
+  const notificationMessage = document.getElementById('notification-message');
+  const closeNotificationBtn = document.getElementById('close-notification-btn');
+  const orderForm = document.getElementById('order-form');
+  const checkoutSummary = document.getElementById('checkout-summary');
+  const clearCartBtn = document.getElementById('clear-cart-btn');
+  const cartEmptyMessage = document.getElementById('cart-empty-message');
+  const cartContent = document.getElementById('cart-content');
+  const shareLocationBtn = document.getElementById('share-location-btn-checkout');
+  const locationStatus = document.getElementById('location-status-checkout');
 
-    const dineInFields = document.getElementById('dine-in-fields');
-    const deliveryFields = document.getElementById('delivery-fields');
-    const radioDineIn = document.getElementById('radio-dine-in');
-    const radioDelivery = document.getElementById('radio-delivery');
+  const dineInFields = document.getElementById('dine-in-fields');
+  const deliveryFields = document.getElementById('delivery-fields');
+  const radioDineIn = document.getElementById('radio-dine-in');
+  const radioDelivery = document.getElementById('radio-delivery');
 
-    const nameInput = document.getElementById('name');
-    const phoneInput = document.getElementById('phone');
-    const addressInput = document.getElementById('address');
-    const tableNumberInput = document.getElementById('table-number');
-    const clientNameLocalInput = document.getElementById('client-name-local');
+  const nameInput = document.getElementById('name');
+  const phoneInput = document.getElementById('phone');
+  const addressInput = document.getElementById('address');
+  const tableNumberInput = document.getElementById('table-number');
+  const clientNameLocalInput = document.getElementById('client-name-local');
 
-    let cart = {};
-    let sharedLocation = null;
-    let orderType = 'dineIn';
+  let cart = {};
+  let sharedLocation = null;
+  let orderType = 'dineIn';
 
-    function setInputRequired(input, isRequired) {
-      input.required = isRequired;
-      input.disabled = !isRequired;
+  function setInputRequired(input, isRequired) {
+    input.required = isRequired;
+    input.disabled = !isRequired;
+  }
+
+  function formatMoney(value) {
+    return '$' + value.toFixed(2);
+  }
+
+  function handleOrderTypeChange() {
+    orderType = document.querySelector('input[name="orderType"]:checked').value;
+
+    sharedLocation = null;
+    locationStatus.textContent = '';
+    shareLocationBtn.disabled = (orderType === 'dineIn');
+
+    if (orderType === 'dineIn') {
+      dineInFields.classList.remove('hidden');
+      deliveryFields.classList.add('hidden');
+
+      setInputRequired(tableNumberInput, true);
+      setInputRequired(nameInput, false);
+      setInputRequired(phoneInput, false);
+      setInputRequired(addressInput, false);
+    } else {
+      dineInFields.classList.add('hidden');
+      deliveryFields.classList.remove('hidden');
+
+      setInputRequired(tableNumberInput, false);
+      setInputRequired(nameInput, true);
+      setInputRequired(phoneInput, true);
+      setInputRequired(addressInput, true);
     }
+  }
 
-    function formatMoney(value) {
-      return '$' + value.toFixed(2);
-    }
-
-    function handleOrderTypeChange() {
-      orderType = document.querySelector('input[name="orderType"]:checked').value;
-
-      sharedLocation = null;
-      locationStatus.textContent = '';
-      shareLocationBtn.disabled = (orderType === 'dineIn');
-
-      if (orderType === 'dineIn') {
-        dineInFields.classList.remove('hidden');
-        deliveryFields.classList.add('hidden');
-
-        setInputRequired(tableNumberInput, true);
-        setInputRequired(nameInput, false);
-        setInputRequired(phoneInput, false);
-        setInputRequired(addressInput, false);
-      } else {
-        dineInFields.classList.add('hidden');
-        deliveryFields.classList.remove('hidden');
-
-        setInputRequired(tableNumberInput, false);
-        setInputRequired(nameInput, true);
-        setInputRequired(phoneInput, true);
-        setInputRequired(addressInput, true);
-      }
-    }
-
-    function renderProducts() {
-      productList.innerHTML = '';
-      products.forEach(product => {
-        const card = document.createElement('div');
-        card.className = 'product-card card-plato bg-[var(--bg-card)] rounded-xl overflow-hidden flex flex-col shadow-lg border border-slate-800';
-        card.innerHTML = `
-          <div class="image-box">
-            <img
-              src="${product.img}"
-              alt="${product.name}"
-              onerror="this.onerror=null;this.src='https://placehold.co/400x224/2C1E18/FCD34D?text=${encodeURIComponent(product.name)}';"
-            >
+  function renderProducts() {
+    productList.innerHTML = '';
+    products.forEach(product => {
+      const card = document.createElement('div');
+      card.className = 'product-card card-plato bg-[var(--bg-card)] rounded-xl overflow-hidden flex flex-col shadow-lg border border-slate-800';
+      card.innerHTML = `
+        <div class="image-box">
+          <img
+            src="${product.img}"
+            alt="${product.name}"
+            onerror="this.onerror=null;this.src='https://placehold.co/400x224/2C1E18/FCD34D?text=${encodeURIComponent(product.name)}';"
+          >
+        </div>
+        <div class="p-5 flex flex-col flex-1 text-center">
+          <h3 class="text-xl md:text-2xl font-bold mb-2 text-[var(--accent)] product-name">${product.name}</h3>
+          <p class="text-xs md:text-sm flex-1 text-[var(--text-muted)] mb-3">${product.desc}</p>
+          <p class="font-extrabold text-[var(--accent-strong)] mt-2 text-lg md:text-xl">${formatMoney(product.price)}</p>
+          <div class="flex items-center justify-center space-x-4 my-4">
+            <button class="quantity-btn minus-btn bg-gray-700/60 text-white rounded-full w-8 h-8 text-lg font-bold hover:bg-[var(--accent-strong)] transition-colors">-</button>
+            <span class="quantity-value text-xl font-bold text-white">1</span>
+            <button class="quantity-btn plus-btn bg-gray-700/60 text-white rounded-full w-8 h-8 text-lg font-bold hover:bg-[var(--accent-strong)] transition-colors">+</button>
           </div>
-          <div class="p-5 flex flex-col flex-1 text-center">
-            <h3 class="text-xl md:text-2xl font-bold mb-2 text-[var(--accent)] product-name">${product.name}</h3>
-            <p class="text-xs md:text-sm flex-1 text-[var(--text-muted)] mb-3">${product.desc}</p>
-            <p class="font-extrabold text-[var(--accent-strong)] mt-2 text-lg md:text-xl">${formatMoney(product.price)}</p>
-            <div class="flex items-center justify-center space-x-4 my-4">
-              <button class="quantity-btn minus-btn bg-gray-700/60 text-white rounded-full w-8 h-8 text-lg font-bold hover:bg-[var(--accent-strong)] transition-colors">-</button>
-              <span class="quantity-value text-xl font-bold text-white">1</span>
-              <button class="quantity-btn plus-btn bg-gray-700/60 text-white rounded-full w-8 h-8 text-lg font-bold hover:bg-[var(--accent-strong)] transition-colors">+</button>
-            </div>
-            <button
-              class="add-to-cart-btn bg-[var(--accent-strong)] text-white font-bold py-2.5 px-4 rounded-full hover:bg-orange-500 transition-colors text-sm md:text-base flex items-center justify-center gap-2"
-              data-id="${product.id}"
-              type="button"
-            >
-              <i class="fas fa-plus"></i>
-              Añadir
-            </button>
-          </div>
-        `;
-        productList.appendChild(card);
-      });
-    }
-
-    function addToCart(productId, quantity = 1) {
-      const idStr = String(productId);
-      if (cart[idStr]) {
-        cart[idStr].quantity += quantity;
-      } else {
-        const product = products.find(p => p.id == productId);
-        if (!product) return;
-        cart[idStr] = { ...product, quantity };
-      }
-      updateCartUI();
-    }
-
-    function updateCartUI() {
-      const totalItems = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
-      cartCountEl.textContent = totalItems;
-      updateCheckoutPage();
-    }
-
-    function updateCheckoutPage() {
-      const cartHasItems = Object.keys(cart).length > 0;
-
-      if (!cartHasItems) {
-        cartEmptyMessage.classList.remove('hidden');
-        cartContent.classList.add('hidden');
-        checkoutSummary.innerHTML = `
-          <p class="text-gray-300 text-sm">
-            Aún no has agregado platos a tu pedido.
-          </p>
-        `;
-        return;
-      }
-
-      cartEmptyMessage.classList.add('hidden');
-      cartContent.classList.remove('hidden');
-
-      let subtotal = 0;
-      let html = '';
-
-      for (const id in cart) {
-        const item = cart[id];
-        const itemSubtotal = item.price * item.quantity;
-        subtotal += itemSubtotal;
-
-        html += `
-          <div class="py-3 border-b border-gray-700 last:border-b-0 flex justify-between items-center text-gray-200">
-            <div class="flex items-center text-sm md:text-base">
-              <span class="font-bold text-[var(--accent)] mr-2">${item.quantity}x</span>
-              <span class="font-semibold">${item.name}</span>
-            </div>
-            <span class="font-bold text-white text-sm md:text-base">${formatMoney(itemSubtotal)}</span>
-          </div>
-        `;
-      }
-
-      html += `
-        <div class="mt-4 border-t border-[var(--accent-strong)] pt-4 space-y-3 text-sm md:text-base">
-          <div class="flex justify-between text-gray-200">
-            <span>Subtotal</span>
-            <span>${formatMoney(subtotal)}</span>
-          </div>
-          <div class="flex justify-between font-extrabold text-lg md:text-xl text-[var(--accent)]">
-            <span>Total a pagar</span>
-            <span>${formatMoney(subtotal)}</span>
-          </div>
+          <button
+            class="add-to-cart-btn bg-[var(--accent-strong)] text-white font-bold py-2.5 px-4 rounded-full hover:bg-orange-500 transition-colors text-sm md:text-base flex items-center justify-center gap-2"
+            data-id="${product.id}"
+            type="button"
+          >
+            <i class="fas fa-plus"></i>
+            Añadir
+          </button>
         </div>
       `;
+      productList.appendChild(card);
+    });
+  }
 
-      checkoutSummary.innerHTML = html;
+  function addToCart(productId, quantity = 1) {
+    const idStr = String(productId);
+    if (cart[idStr]) {
+      cart[idStr].quantity += quantity;
+    } else {
+      const product = products.find(p => p.id == productId);
+      if (!product) return;
+      cart[idStr] = { ...product, quantity };
     }
-
-    productList.addEventListener('click', (e) => {
-      const card = e.target.closest('.product-card');
-      if (!card) return;
-
-      const qtySpan = card.querySelector('.quantity-value');
-
-      const qtyBtn = e.target.closest('.quantity-btn');
-      if (qtyBtn && qtySpan) {
-        let currentValue = parseInt(qtySpan.textContent, 10);
-        if (qtyBtn.classList.contains('plus-btn')) {
-          currentValue++;
-        } else if (qtyBtn.classList.contains('minus-btn') && currentValue > 1) {
-          currentValue--;
-        }
-        qtySpan.textContent = String(currentValue);
-        return;
-      }
-
-      const addBtn = e.target.closest('.add-to-cart-btn');
-      if (addBtn && qtySpan) {
-        const id = addBtn.dataset.id;
-        const quantity = parseInt(qtySpan.textContent, 10);
-        addToCart(id, quantity);
-
-        const product = products.find(p => p.id == Number(id));
-        const nombre = product ? product.name : 'Producto';
-        showNotification(`${quantity} ${nombre}(s) añadido(s) al carrito 🔥`);
-        qtySpan.textContent = '1';
-      }
-    });
-
-    radioDineIn.addEventListener('change', handleOrderTypeChange);
-    radioDelivery.addEventListener('change', handleOrderTypeChange);
-
-    clearCartBtn.addEventListener('click', () => {
-      cart = {};
-      updateCartUI();
-      showNotification('El carrito ha sido vaciado.');
-    });
-
-    shareLocationBtn.addEventListener('click', () => {
-      if (!navigator.geolocation) {
-        locationStatus.textContent = 'La geolocalización no es soportada en este dispositivo.';
-        return;
-      }
-
-      locationStatus.textContent = 'Obteniendo ubicación...';
-      shareLocationBtn.classList.add('bg-yellow-600');
-      shareLocationBtn.classList.remove('bg-blue-600');
-
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          sharedLocation = `https://www.google.com/maps?q=${latitude},${longitude}`;
-          locationStatus.textContent = '✅ Ubicación añadida al pedido.';
-          shareLocationBtn.classList.remove('bg-yellow-600');
-          shareLocationBtn.classList.add('bg-green-600');
-        },
-        () => {
-          locationStatus.textContent = '❌ No se pudo obtener la ubicación. Ingresa la dirección manualmente.';
-          shareLocationBtn.classList.remove('bg-yellow-600');
-          shareLocationBtn.classList.add('bg-blue-600');
-        }
-      );
-    });
-
-    orderForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      if (Object.keys(cart).length === 0) {
-        showNotification('Tu carrito está vacío. Agrega al menos un plato antes de enviar el pedido.');
-        return;
-      }
-
-      const currentOrderType = document.querySelector('input[name="orderType"]:checked').value;
-      let message = '¡Hola Punto Cero al Barril! 🔥 Quisiera hacer el siguiente pedido:\n\n';
-
-      let total = 0;
-      for (const id in cart) {
-        const item = cart[id];
-        message += `• ${item.quantity}x - ${item.name}\n`;
-        total += item.price * item.quantity;
-      }
-
-      message += `\nTotal aproximado: *${formatMoney(total)}*\n\n`;
-
-      if (currentOrderType === 'dineIn') {
-        const mesa = (tableNumberInput.value || '').trim();
-        const nombreLocal = (clientNameLocalInput.value || '').trim();
-
-        if (!mesa) {
-          showNotification('Por favor, ingresa tu número de mesa.');
-          return;
-        }
-
-        message += '*Modalidad:* Servir en mesa 🍽️\n';
-        message += `*Mesa:* ${mesa}\n`;
-        if (nombreLocal) {
-          message += `*Nombre:* ${nombreLocal}\n`;
-        }
-      } else {
-        const name = (nameInput.value || '').trim();
-        const phone = (phoneInput.value || '').trim();
-        const address = (addressInput.value || '').trim();
-
-        if (!name || !phone || !address) {
-          showNotification('Para domicilio, completa Nombre, WhatsApp y Dirección.');
-          return;
-        }
-
-        message += '*Modalidad:* Entrega a domicilio 🛵\n';
-        message += `*Nombre:* ${name}\n`;
-        message += `*WhatsApp:* ${phone}\n`;
-        message += `*Dirección:* ${address}\n`;
-        if (sharedLocation) {
-          message += `*Ubicación (Maps):* ${sharedLocation}\n`;
-        } else {
-          message += '*Ubicación:* No enviada (puedo enviar luego por chat).\n';
-        }
-      }
-
-      message += '\nPor favor, confirmen el total y el tiempo estimado. 🙏🔥';
-
-      const whatsappNumber = '593988025075';
-      const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-
-      window.open(whatsappUrl, '_blank');
-
-      cart = {};
-      sharedLocation = null;
-      orderForm.reset();
-      handleOrderTypeChange();
-      updateCartUI();
-      showPage('home');
-      showNotification('¡Pedido enviado! Revisa tu WhatsApp para la confirmación de Punto Cero al Barril.');
-    });
-
-    const pages = document.querySelectorAll('main');
-    window.showPage = (pageId) => {
-      pages.forEach(page => page.classList.add('hidden'));
-      const target = document.getElementById(`${pageId}-page`);
-      if (target) {
-        target.classList.remove('hidden');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-      if (pageId === 'checkout') {
-        updateCheckoutPage();
-      }
-    };
-
-    function showNotification(message) {
-      notificationMessage.textContent = message;
-      notificationModal.classList.remove('opacity-0', 'pointer-events-none');
-      notificationModal.querySelector('.modal-inner').classList.remove('scale-95');
-    }
-
-    function hideNotification() {
-      notificationModal.classList.add('opacity-0', 'pointer-events-none');
-      notificationModal.querySelector('.modal-inner').classList.add('scale-95');
-    }
-
-    closeNotificationBtn.addEventListener('click', hideNotification);
-    notificationModal.addEventListener('click', (e) => {
-      if (e.target === notificationModal) hideNotification();
-    });
-
-    renderProducts();
     updateCartUI();
-    handleOrderTypeChange();
+  }
+
+  function updateCartUI() {
+    const totalItems = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
+    cartCountEl.textContent = totalItems;
+    updateCheckoutPage();
+  }
+
+  function updateCheckoutPage() {
+    const cartHasItems = Object.keys(cart).length > 0;
+
+    if (!cartHasItems) {
+      cartEmptyMessage.classList.remove('hidden');
+      cartContent.classList.add('hidden');
+      checkoutSummary.innerHTML = `
+        <p class="text-gray-300 text-sm">
+          Aún no has agregado platos a tu pedido.
+        </p>
+      `;
+      return;
+    }
+
+    cartEmptyMessage.classList.add('hidden');
+    cartContent.classList.remove('hidden');
+
+    let subtotal = 0;
+    let html = '';
+
+    for (const id in cart) {
+      const item = cart[id];
+      const itemSubtotal = item.price * item.quantity;
+      subtotal += itemSubtotal;
+
+      html += `
+        <div class="py-3 border-b border-gray-700 last:border-b-0 flex justify-between items-center text-gray-200">
+          <div class="flex items-center text-sm md:text-base">
+            <span class="font-bold text-[var(--accent)] mr-2">${item.quantity}x</span>
+            <span class="font-semibold">${item.name}</span>
+          </div>
+          <span class="font-bold text-white text-sm md:text-base">${formatMoney(itemSubtotal)}</span>
+        </div>
+      `;
+    }
+
+    html += `
+      <div class="mt-4 border-t border-[var(--accent-strong)] pt-4 space-y-3 text-sm md:text-base">
+        <div class="flex justify-between text-gray-200">
+          <span>Subtotal</span>
+          <span>${formatMoney(subtotal)}</span>
+        </div>
+        <div class="flex justify-between font-extrabold text-lg md:text-xl text-[var(--accent)]">
+          <span>Total a pagar</span>
+          <span>${formatMoney(subtotal)}</span>
+        </div>
+      </div>
+    `;
+
+    checkoutSummary.innerHTML = html;
+  }
+
+  productList.addEventListener('click', (e) => {
+    const card = e.target.closest('.product-card');
+    if (!card) return;
+
+    const qtySpan = card.querySelector('.quantity-value');
+
+    const qtyBtn = e.target.closest('.quantity-btn');
+    if (qtyBtn && qtySpan) {
+      let currentValue = parseInt(qtySpan.textContent, 10);
+      if (qtyBtn.classList.contains('plus-btn')) {
+        currentValue++;
+      } else if (qtyBtn.classList.contains('minus-btn') && currentValue > 1) {
+        currentValue--;
+      }
+      qtySpan.textContent = String(currentValue);
+      return;
+    }
+
+    const addBtn = e.target.closest('.add-to-cart-btn');
+    if (addBtn && qtySpan) {
+      const id = addBtn.dataset.id;
+      const quantity = parseInt(qtySpan.textContent, 10);
+      addToCart(id, quantity);
+
+      const product = products.find(p => p.id == Number(id));
+      const nombre = product ? product.name : 'Producto';
+      showNotification(`${quantity} ${nombre}(s) añadido(s) al carrito 🔥`);
+      qtySpan.textContent = '1';
+    }
   });
-  </script>
+
+  radioDineIn.addEventListener('change', handleOrderTypeChange);
+  radioDelivery.addEventListener('change', handleOrderTypeChange);
+
+  clearCartBtn.addEventListener('click', () => {
+    cart = {};
+    updateCartUI();
+    showNotification('El carrito ha sido vaciado.');
+  });
+
+  shareLocationBtn.addEventListener('click', () => {
+    if (!navigator.geolocation) {
+      locationStatus.textContent = 'La geolocalización no es soportada en este dispositivo.';
+      return;
+    }
+
+    locationStatus.textContent = 'Obteniendo ubicación...';
+    shareLocationBtn.classList.add('bg-yellow-600');
+    shareLocationBtn.classList.remove('bg-blue-600');
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        sharedLocation = `https://www.google.com/maps?q=${latitude},${longitude}`;
+        locationStatus.textContent = '✅ Ubicación añadida al pedido.';
+        shareLocationBtn.classList.remove('bg-yellow-600');
+        shareLocationBtn.classList.add('bg-green-600');
+      },
+      () => {
+        locationStatus.textContent = '❌ No se pudo obtener la ubicación. Ingresa la dirección manualmente.';
+        shareLocationBtn.classList.remove('bg-yellow-600');
+        shareLocationBtn.classList.add('bg-blue-600');
+      }
+    );
+  });
+
+  orderForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    if (Object.keys(cart).length === 0) {
+      showNotification('Tu carrito está vacío. Agrega al menos un plato antes de enviar el pedido.');
+      return;
+    }
+
+    const currentOrderType = document.querySelector('input[name="orderType"]:checked').value;
+    let message = '¡Hola Punto Cero al Barril! 🔥 Quisiera hacer el siguiente pedido:\n\n';
+
+    let total = 0;
+    for (const id in cart) {
+      const item = cart[id];
+      message += `• ${item.quantity}x - ${item.name}\n`;
+      total += item.price * item.quantity;
+    }
+
+    message += `\nTotal aproximado: *${formatMoney(total)}*\n\n`;
+
+    if (currentOrderType === 'dineIn') {
+      const mesa = (tableNumberInput.value || '').trim();
+      const nombreLocal = (clientNameLocalInput.value || '').trim();
+
+      if (!mesa) {
+        showNotification('Por favor, ingresa tu número de mesa.');
+        return;
+      }
+
+      message += '*Modalidad:* Servir en mesa 🍽️\n';
+      message += `*Mesa:* ${mesa}\n`;
+      if (nombreLocal) {
+        message += `*Nombre:* ${nombreLocal}\n`;
+      }
+    } else {
+      const name = (nameInput.value || '').trim();
+      const phone = (phoneInput.value || '').trim();
+      const address = (addressInput.value || '').trim();
+
+      if (!name || !phone || !address) {
+        showNotification('Para domicilio, completa Nombre, WhatsApp y Dirección.');
+        return;
+      }
+
+      message += '*Modalidad:* Entrega a domicilio 🛵\n`;
+      message += `*Nombre:* ${name}\n`;
+      message += `*WhatsApp:* ${phone}\n`;
+      message += `*Dirección:* ${address}\n`;
+      if (sharedLocation) {
+        message += `*Ubicación (Maps):* ${sharedLocation}\n`;
+      } else {
+        message += '*Ubicación:* No enviada (puedo enviar luego por chat).\n';
+      }
+    }
+
+    message += '\nPor favor, confirmen el total y el tiempo estimado. 🙏🔥';
+
+    const whatsappNumber = '593988025075';
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+    window.open(whatsappUrl, '_blank');
+
+    cart = {};
+    sharedLocation = null;
+    orderForm.reset();
+    handleOrderTypeChange();
+    updateCartUI();
+    showPage('home');
+    showNotification('¡Pedido enviado! Revisa tu WhatsApp para la confirmación de Punto Cero al Barril.');
+  });
+
+  const pages = document.querySelectorAll('main');
+  window.showPage = (pageId) => {
+    pages.forEach(page => page.classList.add('hidden'));
+    const target = document.getElementById(`${pageId}-page`);
+    if (target) {
+      target.classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    if (pageId === 'checkout') {
+      updateCheckoutPage();
+    }
+  };
+
+  function showNotification(message) {
+    notificationMessage.textContent = message;
+    notificationModal.classList.remove('opacity-0', 'pointer-events-none');
+    notificationModal.querySelector('.modal-inner').classList.remove('scale-95');
+  }
+
+  function hideNotification() {
+    notificationModal.classList.add('opacity-0', 'pointer-events-none');
+    notificationModal.querySelector('.modal-inner').classList.add('scale-95');
+  }
+
+  closeNotificationBtn.addEventListener('click', hideNotification);
+  notificationModal.addEventListener('click', (e) => {
+    if (e.target === notificationModal) hideNotification();
+  });
+
+  renderProducts();
+  updateCartUI();
+  handleOrderTypeChange();
+});
+</script>
 </body>
 </html>
