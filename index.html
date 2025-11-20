@@ -367,9 +367,38 @@
           style="max-width: 100%; height: auto;">
         </canvas>
 
-        <p class="text-[10px] md:text-xs text-[var(--text-muted)] text-center">
-          Controles: ⬅️➡️ mover · ⬆️ girar · ⬇️ caer rápido
-        </p>
+        <div class="flex flex-wrap justify-center gap-2 w-full mt-2">
+  <button
+    id="tetris-left"
+    type="button"
+    class="px-4 py-2 rounded-full bg-slate-800 hover:bg-slate-700 text-white text-lg">
+    ⬅️
+  </button>
+  <button
+    id="tetris-rotate"
+    type="button"
+    class="px-4 py-2 rounded-full bg-slate-800 hover:bg-slate-700 text-white text-lg">
+    🔄
+  </button>
+  <button
+    id="tetris-down"
+    type="button"
+    class="px-4 py-2 rounded-full bg-slate-800 hover:bg-slate-700 text-white text-lg">
+    ⬇️
+  </button>
+  <button
+    id="tetris-right"
+    type="button"
+    class="px-4 py-2 rounded-full bg-slate-800 hover:bg-slate-700 text-white text-lg">
+    ➡️
+  </button>
+</div>
+
+<p class="text-[10px] md:text-xs text-[var(--text-muted)] text-center mt-1">
+  Controles en celular: toca <strong>izquierda / derecha</strong> del juego para mover,
+  arriba para <strong>girar</strong> y el centro para <strong>bajar</strong>.  
+  También puedes usar los botones ⬅️ 🔄 ⬇️ ➡️ de aquí abajo.
+</p>
 
       </div>
     </div>
@@ -1102,6 +1131,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const linesEl = document.getElementById("tetris-lines");
   const restart = document.getElementById("tetris-restart");
 
+  // Botones táctiles
+  const btnLeft   = document.getElementById("tetris-left");
+  const btnRight  = document.getElementById("tetris-right");
+  const btnRotate = document.getElementById("tetris-rotate");
+  const btnDown   = document.getElementById("tetris-down");
+
+  // Si por algún motivo no existe el canvas, salimos sin romper nada
   if (!canvas || !scoreEl || !linesEl || !restart) return;
 
   const ctx = canvas.getContext("2d");
@@ -1247,7 +1283,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function fall(time=0) {
-    if (over){ draw(); return; }
+    if (over){
+      draw();
+      return;
+    }
     const delta = time - last;
     last = time;
     drop += delta;
@@ -1267,27 +1306,104 @@ document.addEventListener("DOMContentLoaded", () => {
     requestAnimationFrame(fall);
   }
 
+  // --- MOVIMIENTOS REUTILIZABLES ---
+  function moveLeft() {
+    if (!piece || over) return;
+    pos.x--;
+    if (collide()) pos.x++;
+  }
+
+  function moveRight() {
+    if (!piece || over) return;
+    pos.x++;
+    if (collide()) pos.x--;
+  }
+
+  function softDrop() {
+    if (!piece || over) return;
+    pos.y++;
+    if (collide()) {
+      pos.y--;
+      merge();
+      clearLines();
+      resetPiece();
+    }
+    drop = 0;
+  }
+
+  // --- TECLADO (PC) ---
   document.addEventListener("keydown", e => {
     if (!piece || over) return;
 
     if (e.key === "ArrowLeft") {
-      pos.x--;
-      if (collide()) pos.x++;
+      moveLeft();
     }
     else if (e.key === "ArrowRight") {
-      pos.x++;
-      if (collide()) pos.x--;
+      moveRight();
     }
     else if (e.key === "ArrowDown") {
-      pos.y++;
-      if (collide()) { pos.y--; merge(); clearLines(); resetPiece(); }
-      drop = 0;
+      softDrop();
     }
     else if (e.key === "ArrowUp") {
       rotatePiece();
     }
   });
 
+  // --- BOTONES TÁCTILES ---
+  if (btnLeft) {
+    btnLeft.addEventListener("click", () => moveLeft());
+  }
+  if (btnRight) {
+    btnRight.addEventListener("click", () => moveRight());
+  }
+  if (btnDown) {
+    btnDown.addEventListener("click", () => softDrop());
+  }
+  if (btnRotate) {
+    btnRotate.addEventListener("click", () => rotatePiece());
+  }
+
+  // --- TOQUES SOBRE EL CANVAS ---
+  function handleCanvasTap(clientX, clientY) {
+    if (!piece || over) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+
+    const thirdW = rect.width / 3;
+    const topZone = rect.height * 0.3;
+    const bottomZone = rect.height * 0.7;
+
+    if (y < topZone) {
+      // Parte de arriba → girar
+      rotatePiece();
+      return;
+    }
+
+    if (x < thirdW) {
+      // Lado izquierdo → mover izquierda
+      moveLeft();
+    } else if (x > 2 * thirdW) {
+      // Lado derecho → mover derecha
+      moveRight();
+    } else {
+      // Centro → bajar
+      softDrop();
+    }
+  }
+
+  canvas.addEventListener("click", (e) => {
+    handleCanvasTap(e.clientX, e.clientY);
+  });
+
+  canvas.addEventListener("touchstart", (e) => {
+    const touch = e.touches[0];
+    if (!touch) return;
+    handleCanvasTap(touch.clientX, touch.clientY);
+  }, { passive: true });
+
+  // --- REINICIAR ---
   restart.addEventListener("click", () => {
     board = matrix(COLS, ROWS);
     score = 0;
@@ -1298,6 +1414,7 @@ document.addEventListener("DOMContentLoaded", () => {
     resetPiece();
   });
 
+  // --- INICIO ---
   resetPiece();
   fall();
 });
